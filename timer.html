@@ -1,0 +1,188 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href='https://fonts.googleapis.com/css?family=ABeeZee' rel='stylesheet'>
+<style>
+
+body {
+	background-color: #cce6ff;
+	margin:0px;
+}
+
+div.main {
+	font-size: 150px;
+	display:block;
+	margin:auto;
+	margin-top:100px;
+	width:60%;
+	height:50%;
+  	font-family: 'ABeeZee';
+	
+}
+div.buttonBox{
+	position:relative;
+	text-align:center;	
+}
+.startButton {
+  background-color: #4CAF50; /* Green */
+  border: 2px solid #4CAF50;
+  border-radius: 12px;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 48px;
+  transition-duration: 0.3s;
+  font-family: 'ABeeZee';
+}
+.startButton:hover {
+  background-color: #FFFFFF; /* Green */
+  color: #4CAF50;
+}
+.stopButton {
+  background-color: #f1454d; /* Red */
+  border: 2px solid #f1454d;
+  border-radius: 12px;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 48px;
+  transition-duration: 0.3s;
+  font-family: 'ABeeZee';
+}
+.stopButton:hover {
+  background-color: #FFFFFF; /* Green */
+  color: #f1454d;
+}
+
+p {
+  text-align: center;
+  margin-top: 0px;
+  padding-bottom:0px;
+  margin-bottom:0px;
+}
+p.section{
+	display:block;
+	border: 2px solid #003300;
+	margin-top:10px;
+	font-size:32px;
+}
+p.intervalList{
+	font-size:22px;
+}
+</style>
+</head>
+
+
+<body id="body" onload="startup()">
+
+	<div style="float:left;width:200px;position:relative;height:9000px;background-color: black;color:white;margin:0px;">
+		<p class="section" style="border:none;color:black;margin-top:150px;">a</p>
+		<p id="no1" class="section">Speedsheet</p>
+		<p id="no3" class="section">Mark and Graph</p>
+		<p id="no5" class="section">Flashcards 1</p>
+		<p id="no6" class="section">Graph and Reorganise</p>
+		<p id="no8" class="section">Flashcards 2</p>
+		<p id="no9" class="section">Graph and Pack up</p>
+	</div>
+
+<p id="lessonTimer" style="text-align:right;font-size:48px;color:red;">Time Paused: 0m0s</p>
+<div class="main">
+	<p style="display:block;border:2px solid black;font-size:72px;" id=instruction></p>
+	<p id="timer"></p>
+	<div class="buttonBox">
+		<button class="startButton" onclick="clearInterval(time); time = window.setInterval(countdown, 1000); ">Start</button>
+		<button class="stopButton" onclick="stop(); clearInterval(lessonTime); time = setInterval(timeLesson, 1000)">Pause</button>
+	</div>
+	<p class="intervalList" id="intervalList"></p>
+</div>
+
+<script>
+	var intervalCount = 0;
+	var minutes = 0;
+	var seconds = 0;
+	var timeremaining = 0;
+	var time;
+	var lessonTime;
+	var intervals = [1,120,120,5,60,60,5,60,60];
+	var instructions = ["Einstein Numeracy Program"," Speedsheets"," Marking","Pause"," Flashcards"," Graphing / Organising","Pause"," Flashcards"," Graphing / Packing up"," FINISHED!"]
+	var tseconds;
+	var tminutes;
+
+
+function startup()
+{
+	timeremaining = intervals[intervalCount];
+	seconds = timeremaining%60;
+	minutes = Math.floor(timeremaining/60);
+	tminutes=0;
+	tseconds=0;
+	document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
+	//var timesList = [];
+	//for(i=0; i<intervals.length;i++){
+	//	timesList.push(instructions[i]);
+	//	console.log(timesList);
+	//	
+	//}
+	//document.getElementById("intervalList").innerHTML = timesList;
+	document.getElementById("instruction").innerHTML = "Einstein Numeracy Program";
+
+}
+
+function countdown()
+{
+	
+	
+	timeremaining -= 1;
+	minutes = Math.floor(timeremaining/60);
+	seconds = timeremaining%60;
+	if(timeremaining==0)
+	{
+	document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
+	document.getElementById("instruction").innerHTML = instructions[intervalCount];
+	return;	
+	}
+	if(timeremaining<0)
+	{
+
+		intervalCount+=1;
+		if(instructions[intervalCount]=="Pause"){document.getElementById("body").style="background-color:#f1454d;";}
+		if(instructions[intervalCount]!="Pause"){document.getElementById("body").style="background-color:#cce6ff;";}
+		if(instructions[intervalCount]==" FINISHED!"){document.getElementById("body").style="background-color:#4CAF50;";}
+		
+		timeremaining = intervals[intervalCount];
+		document.getElementById("no"+intervalCount).style="border:solid 4px red;";
+		minutes = Math.floor(timeremaining/60);
+		seconds = timeremaining%60;
+		document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
+		document.getElementById("instruction").innerHTML = instructions[intervalCount];
+		return;
+	}
+	if(intervalCount==10){
+		document.getElementById("timer").innerHTML = 0 + "m " + 0 + "s ";
+		document.getElementById("instruction").innerHTML = instructions[intervalCount];
+		stop();
+		return;
+	}
+	document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
+	document.getElementById("instruction").innerHTML = instructions[intervalCount];
+	
+}
+function timeLesson(){
+	tseconds+=1;
+	tminutes=Math.floor(tseconds/60);
+	lessonTime = tseconds%60;
+	document.getElementById("lessonTimer").innerHTML ="Time Paused: "+tminutes+"m"+lessonTime+"s";
+}
+
+function stop(){clearInterval(time);}
+
+
+</script>
+
+</body>
+</html>
